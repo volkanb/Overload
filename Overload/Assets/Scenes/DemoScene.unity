@@ -156,6 +156,11 @@ Prefab:
       propertyPath: m_Name
       value: TileShooter (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 114957243360106600, guid: ad50f875326aa1c46bbdab1c7886e8ca,
+        type: 2}
+      propertyPath: secondsToStart
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ad50f875326aa1c46bbdab1c7886e8ca, type: 2}
   m_IsPrefabParent: 0
@@ -327,7 +332,7 @@ GameObject:
   - component: {fileID: 423385802}
   - component: {fileID: 423385801}
   - component: {fileID: 423385800}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: InputAreaRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -458,9 +463,69 @@ Prefab:
       propertyPath: m_Name
       value: TileShooter (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 114957243360106600, guid: ad50f875326aa1c46bbdab1c7886e8ca,
+        type: 2}
+      propertyPath: secondsToStart
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ad50f875326aa1c46bbdab1c7886e8ca, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &531817269
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 531817270}
+  - component: {fileID: 531817271}
+  - component: {fileID: 531817272}
+  m_Layer: 9
+  m_Name: TouchGrabber
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &531817270
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 531817269}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1697059909}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!64 &531817271
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 531817269}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_SkinWidth: 0.01
+  m_Mesh: {fileID: 4300000, guid: 4f01ec05ec4a408479b0a0d9df3075cb, type: 3}
+--- !u!114 &531817272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 531817269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cccdf55afac4b8f4b8c36b0bf6367d6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &796688085
 Prefab:
   m_ObjectHideFlags: 0
@@ -503,6 +568,11 @@ Prefab:
     - target: {fileID: 1421356846184016, guid: ad50f875326aa1c46bbdab1c7886e8ca, type: 2}
       propertyPath: m_Name
       value: TileShooter (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 114957243360106600, guid: ad50f875326aa1c46bbdab1c7886e8ca,
+        type: 2}
+      propertyPath: secondsToStart
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ad50f875326aa1c46bbdab1c7886e8ca, type: 2}
@@ -662,6 +732,7 @@ GameObject:
   - component: {fileID: 1487580383}
   - component: {fileID: 1487580382}
   - component: {fileID: 1487580381}
+  - component: {fileID: 1487580385}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -726,12 +797,26 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1487580380}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1487580385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1487580380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c656c2ddf78b090478448af47718b5c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  touchInputMask:
+    serializedVersion: 2
+    m_Bits: 512
 --- !u!1 &1494844533
 GameObject:
   m_ObjectHideFlags: 0
@@ -744,7 +829,7 @@ GameObject:
   - component: {fileID: 1494844536}
   - component: {fileID: 1494844535}
   - component: {fileID: 1494844534}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: InputAreaLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -846,7 +931,7 @@ GameObject:
   - component: {fileID: 1670526181}
   - component: {fileID: 1670526183}
   - component: {fileID: 1670526184}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Center
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1004,6 +1089,11 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 3
+--- !u!4 &1697059909 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 4768764757414328, guid: 36dabc2313722614ea6c49520b5268a1,
+    type: 2}
+  m_PrefabInternal: {fileID: 2140590347}
 --- !u!1 &1723740221
 GameObject:
   m_ObjectHideFlags: 0

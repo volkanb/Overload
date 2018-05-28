@@ -13,10 +13,10 @@ public class TileController : MonoBehaviour {
     void Start()
     {
         gController = GameObject.Find("GameController").GetComponent<GameController>();
-    }     
+    }
 
-    private void OnMouseDown()
-    {        
+    public void OnMouseDown()
+    {
         isTriggered = true;
         
         Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, explosiveRadius);
@@ -38,8 +38,7 @@ public class TileController : MonoBehaviour {
         Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, explosiveRadius);
 
         for (int i = 0; i < hitColliders.Length; i++)
-        {
-            //hitColliders[i].SendMessage("Damage", enemyDamage);
+        {            
             if (hitColliders[i].gameObject.tag == "Tile" && !hitColliders[i].gameObject.GetComponent<TileController>().isTriggered && hitColliders[i].gameObject.GetComponent<TileController>().colorCode == colorCode)
             {
                 hitColliders[i].SendMessage("DestroyAndTrigger");

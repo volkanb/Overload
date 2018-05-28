@@ -27,8 +27,18 @@ public class InputAreaController : MonoBehaviour {
             center.GetComponent<Rigidbody2D>().AddTorque(torque);
 	}
 
-    private void OnMouseDown()
+    public void OnMouseDown()    
     {
         isRotating = !isRotating;
+        ToggleColor();
+    }
+
+    private void ToggleColor()
+    {
+        Material mat = GetComponent<Renderer>().material;
+        if (mat.color != UnityEngine.Color.cyan)
+            mat.color = UnityEngine.Color.cyan;
+        else
+            mat.color = UnityEngine.Color.white;
     }
 }
