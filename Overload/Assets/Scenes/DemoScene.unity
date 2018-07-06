@@ -192,9 +192,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   colors:
-  - {fileID: 2100000, guid: f7060e38952dc914194400fd9bd073ce, type: 2}
+  - {fileID: 2100000, guid: 2a6c7501dc948284883de6f67f05199e, type: 2}
   - {fileID: 2100000, guid: c8a9e979c6ab3d44695e624eccdc2735, type: 2}
   - {fileID: 2100000, guid: 34b71edf780c45d4a97bcf50251e04f6, type: 2}
+  colorsHighlighted:
+  - {fileID: 2100000, guid: 6bd7cd4db6e23ec438b012380a94e495, type: 2}
+  - {fileID: 2100000, guid: 85033bbafc37f80498f252dd08754986, type: 2}
+  - {fileID: 2100000, guid: d1628a023d11ecf47a0d0d7c47e7e1ed, type: 2}
+  highlightMode: 0
+  tappedTile: {fileID: 0}
+  score: 0
+  nextChainTileQuantity: -1
+  nextChainColorCode: -1
+  recentChainTileQuantity: 0
+  recentChainColorCode: -1
 --- !u!4 &197673151
 Transform:
   m_ObjectHideFlags: 0
@@ -624,7 +635,7 @@ Prefab:
         type: 2}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: f7060e38952dc914194400fd9bd073ce, type: 2}
+      objectReference: {fileID: 2100000, guid: 2a6c7501dc948284883de6f67f05199e, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 36dabc2313722614ea6c49520b5268a1, type: 2}
   m_IsPrefabParent: 0
@@ -717,7 +728,7 @@ Prefab:
         type: 2}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: f7060e38952dc914194400fd9bd073ce, type: 2}
+      objectReference: {fileID: 2100000, guid: 2a6c7501dc948284883de6f67f05199e, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 36dabc2313722614ea6c49520b5268a1, type: 2}
   m_IsPrefabParent: 0
@@ -1037,7 +1048,7 @@ PointEffector2D:
     serializedVersion: 2
     m_Bits: 4294967295
   m_ForceMagnitude: -10
-  m_ForceVariation: 0
+  m_ForceVariation: -50
   m_DistanceScale: 1
   m_ForceSource: 1
   m_ForceTarget: 1
@@ -1067,7 +1078,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 17.76, y: 9.92}
+  m_Size: {x: 50, y: 50}
   m_EdgeRadius: 0
 --- !u!50 &1670526184
 Rigidbody2D:
@@ -1202,7 +1213,7 @@ Prefab:
         type: 2}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: f7060e38952dc914194400fd9bd073ce, type: 2}
+      objectReference: {fileID: 2100000, guid: 2a6c7501dc948284883de6f67f05199e, type: 2}
     - target: {fileID: 114140000812448406, guid: 36dabc2313722614ea6c49520b5268a1,
         type: 2}
       propertyPath: yellow
