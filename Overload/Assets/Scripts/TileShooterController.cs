@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TileShooterController : MonoBehaviour {
 
@@ -23,5 +24,24 @@ public class TileShooterController : MonoBehaviour {
         tileClone.GetComponent<TileController>().GetColor();
 
         gController.AddNewTile(transform.GetInstanceID(), tileClone.gameObject);
+
+        // Unique combo tile processing
+        if (GameController.totalPops > 4 && (GameController.totalPops % 5) == 0 && GameController.totalUniqueComboTiles < (int)(GameController.totalPops / 5))
+        {
+            TileController tc = tileClone.GetComponent<TileController>();
+            tc.textComponent = tileClone.transform.GetChild(0).transform.GetComponentInChildren<Text>();
+
+            tc.isComboTile = true;
+            GameController.totalUniqueComboTiles++;
+
+            // Combo counter calculation depending on level progress
+            int progressIncrement = ( (int)(GameController.totalPops / 5) * 2);         // Calculate level progress based increment
+            tc.comboCounter = ((int)Random.Range(2.0f, 4.0f) + progressIncrement);      // Add random value
+            tc.textComponent.text = tc.comboCounter.ToString();            
+        }
+        else
+        {
+            tileClone.transform.GetChild(0).gameObject.SetActive(false);
+        }
     }
 }

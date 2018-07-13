@@ -14,7 +14,10 @@ public class GameController : MonoBehaviour {
 
     // Scoring and stats
     public int score = 0;
-    static int completedChains = 0;
+    public static int totalPops = 0;
+    public static int totalUniqueComboTiles = 0;
+    public static int completedChains = 0;
+    public static int currentChainRequiredCombo = 0;
     public int nextChainTileQuantity = -1;
     public int nextChainColorCode = -1;
     public int recentChainTileQuantity = 0;
@@ -31,7 +34,7 @@ public class GameController : MonoBehaviour {
     }
 
     // Update is called once per frame
-        void Update() {
+    void Update() {
         if (tappedTile && !highlightMode)           // First (after a pop sequence) tapped tile, start dynamic checking
         {
             tappedTile.SendMessage("ProcessAndTrigger");
@@ -61,6 +64,7 @@ public class GameController : MonoBehaviour {
             tile.Value.SendMessage("UncheckTrigger");
 
         highlightedTiles.Clear();
+        currentChainRequiredCombo = 0;
 
         tappedTile.SendMessage("ProcessAndTrigger");                            // restart the search and highlight process
     }
@@ -70,6 +74,7 @@ public class GameController : MonoBehaviour {
         CancelInvoke();                                                         // clear highlight flags and cancel the dynamic check
         tappedTile = null;
         highlightMode = false;
+        currentChainRequiredCombo = 0;
 
         foreach (KeyValuePair<int, GameObject> tile in highlightedTiles)        // clear the flags on highlighted tiles 
             tile.Value.SendMessage("UncheckTrigger");
@@ -79,26 +84,37 @@ public class GameController : MonoBehaviour {
 
     public void InitiatePopSequence()
     {
-        CancelInvoke();                                                         // clear highlight flags and cancel the dynamic check
-        tappedTile = null;
-        highlightMode = false;
-
-        List<GameObject> tilesToPop = new List<GameObject>();       
-        
-        foreach (KeyValuePair<int, GameObject> tile in highlightedTiles)        // clear the flags on highlighted tiles and add them to pop list
+        if (highlightedTiles.Count < currentChainRequiredCombo)                 // Check if the combo requirement is met
         {
-            tile.Value.SendMessage("UncheckTrigger");
-            tilesToPop.Add(tile.Value);            
+            CancelHighlight();
         }
-        highlightedTiles.Clear();                                               // remove the highlighted tiles from the list
-            
-        
-        ScoreProcessing(tilesToPop.Count, tilesToPop[0].GetComponent<TileController>().colorCode);         // handle scoring depending on player's combo and required chain
+        else
+        {
+            CancelInvoke();                                                         // clear highlight flags and cancel the dynamic check
+            tappedTile = null;
+            highlightMode = false;
 
-        foreach (GameObject go in tilesToPop.ToArray())                          // Destroy the tiles
-            Destroy(go);            
+            List<GameObject> tilesToPop = new List<GameObject>();
+
+            foreach (KeyValuePair<int, GameObject> tile in highlightedTiles)        // clear the flags on highlighted tiles and add them to pop list
+            {
+                tile.Value.SendMessage("UncheckTrigger");
+                tilesToPop.Add(tile.Value);
+            }
+            highlightedTiles.Clear();                                               // remove the highlighted tiles from the list
+
+
+            ScoreProcessing(tilesToPop.Count, tilesToPop[0].GetComponent<TileController>().colorCode, (currentChainRequiredCombo > 0));         // handle scoring depending on player's combo and required chain
+
+            foreach (GameObject go in tilesToPop.ToArray())                         // Destroy the tiles
+                Destroy(go);
+
+            totalPops++;                                                            // increment of total pops counter
+            highlightMode = false;                                                  // deactivate highlight mode
+            currentChainRequiredCombo = 0;                                          // reset required combo counter
+        }
+
         
-        highlightMode = false;
     }
 
     public void AddNewTile(int id, GameObject tile)
@@ -111,50 +127,54 @@ public class GameController : MonoBehaviour {
         highlightedTiles[id] = tile;
     }
 
-    public void ScoreProcessing(int noOfTilesPopped, int cCode)
+    public void ScoreProcessing(int noOfTilesPopped, int cCode, bool comboMultiplier)
     {
-        Debug.Log(noOfTilesPopped.ToString() + " tiles popped. " );
-        score += (Mathf.CeilToInt(noOfTilesPopped / 3) + 10) * noOfTilesPopped;         // increase the score depending on the no of tiles popped
+        // Debug.Log(noOfTilesPopped.ToString() + " tiles popped. " );
 
-        if(noOfTilesPopped >= nextChainTileQuantity && cCode == nextChainColorCode)     // required chain completed
-        {
-            // Add bonus score for fulfilling the required chain
+        // Increase the score depending on the no of tiles popped
+        score += (Mathf.CeilToInt(noOfTilesPopped / 3) + 10) * noOfTilesPopped;         
+
+        // Check required chain, add bonus score for fulfilling the required chain, specify next chain
+        if (noOfTilesPopped >= nextChainTileQuantity && cCode == nextChainColorCode)     
+        {            
             completedChains++;
             if (completedChains >= 20)
             {
                 nextChainTileQuantity = Mathf.CeilToInt(UnityEngine.Random.Range(18.0f, 20.0f));
-                nextChainColorCode = UnityEngine.Random.Range(0, colors.Length);
-
                 score += 800;
-            } else if (completedChains >= 15)
+            }
+            else if (completedChains >= 15)
             {
                 nextChainTileQuantity = Mathf.CeilToInt(UnityEngine.Random.Range(16.0f, 18.0f));
-                nextChainColorCode = UnityEngine.Random.Range(0, colors.Length);
-
                 score += 400;
-            } else if (completedChains >= 10)
+            }
+            else if (completedChains >= 10)
             {
                 nextChainTileQuantity = Mathf.CeilToInt(UnityEngine.Random.Range(12.0f, 16.0f));
-                nextChainColorCode = UnityEngine.Random.Range(0, colors.Length);
-
                 score += 200;
-            } else if (completedChains >= 5)
+            }
+            else if (completedChains >= 5)
             {
                 nextChainTileQuantity = Mathf.CeilToInt(UnityEngine.Random.Range(8.0f, 12.0f));
-                nextChainColorCode = UnityEngine.Random.Range(0, colors.Length);
-
                 score += 100;
-            } else
+            }
+            else
             {
                 nextChainTileQuantity = Mathf.CeilToInt(UnityEngine.Random.Range(4.0f, 8.0f));
-                nextChainColorCode = UnityEngine.Random.Range(0, colors.Length);
-
                 score += 50;
-            }            
+            }
+
+            nextChainColorCode = UnityEngine.Random.Range(0, colors.Length);
         }
+
+
+        // Add bonus combo score
+        if (comboMultiplier)
+            score += 100;
+
+        // Set recent chain variables
         recentChainColorCode = cCode;
         recentChainTileQuantity = noOfTilesPopped;
-
     }
 
     private void OnGUI()
@@ -166,21 +186,24 @@ public class GameController : MonoBehaviour {
 
     public string ColorToString(int colorCode)
     {
+        string res = "";
         switch (colorCode)
         {
             case 0:
-                return "Blue";
+                res = "Blue";
                 break;
             case 1:
-                return "Green";
+                res = "Green";
                 break;
             case 2:
-                return "Red";
+                res = "Red";
                 break;
             default:
-                return "???";
+                res = "???";
                 break;
         }
+
+        return res;
     }
 
 
