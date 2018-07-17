@@ -5,21 +5,28 @@ using UnityEngine.UI;
 
 public class TileController : MonoBehaviour {
 
-    public GameController gController;          // Game Controller reference
+    public GameController gController;                  // Game Controller reference
     Renderer rend;                              
     public int colorCode;
     public bool isTriggered = false;
     public float explosiveRadius = 0.6f;
 
+    public bool isInTheEdge = false;
+    public bool isOverloading = false;
+
+    public bool isPopping = false;
+
     public bool isComboTile = false;
-    public int comboCounter = 0;                       // Counter for unique combo tiles
-    public Text textComponent = null;                  // Text component for unique combo tiles
+    public int comboCounter = 0;                        // Counter for unique combo tiles
+    public Text textComponent = null;                   // Text component for unique combo tiles
 
     // Use this for initialization
     void Start()
     {
         gController = GameObject.Find("GameController").GetComponent<GameController>();
-        rend = GetComponent<Renderer>();        
+        rend = GetComponent<Renderer>();
+
+        Invoke("ActivateEdgeBoolean", 2);
     }
 
     public void OnMouseDown()
@@ -95,6 +102,15 @@ public class TileController : MonoBehaviour {
         {
             isTriggered = false;
             rend.material = gController.colors[colorCode];
+        }        
+    }
+
+    public void ActivateEdgeBoolean()
+    {
+        if (!isInTheEdge)
+        {            
+            isOverloading = true;
+            gController.IncreaseOverload();
         }        
     }
 }

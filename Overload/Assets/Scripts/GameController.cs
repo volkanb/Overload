@@ -23,6 +23,13 @@ public class GameController : MonoBehaviour {
     public int recentChainTileQuantity = 0;
     public int recentChainColorCode = -1;
 
+    // Overload checker
+    public int noOfOverloadingTiles = 0;
+    // Overload plane
+    public MeshRenderer overloadPlaneRenderer;
+    public float alphaLevel = 0.0f;
+    public float alphaIncreaseVar = 0.001f;
+
     public Dictionary<int, GameObject> tiles = new Dictionary<int, GameObject>();                // collection of all the active tiles
     public Dictionary<int, GameObject> highlightedTiles = new Dictionary<int, GameObject>();     // collection of highlighted tiles
 
@@ -31,6 +38,8 @@ public class GameController : MonoBehaviour {
     {
         nextChainTileQuantity = Mathf.CeilToInt(UnityEngine.Random.Range(4.0f, 8.0f));
         nextChainColorCode = UnityEngine.Random.Range(0, colors.Length);
+        overloadPlaneRenderer = GameObject.Find("OverloadPlane").GetComponent<MeshRenderer>();
+        overloadPlaneRenderer.material.color = new Color(1, 1, 1, alphaLevel);
     }
 
     // Update is called once per frame
@@ -41,6 +50,27 @@ public class GameController : MonoBehaviour {
             InvokeRepeating("DynamicCheck", 0.01F, 0.01F);
             highlightMode = true;
         }
+        if (noOfOverloadingTiles > 0)
+        {
+            alphaLevel += alphaIncreaseVar;
+            if (alphaLevel > 0.99f)
+            {
+                GameOver();
+            }
+        }
+        if(alphaLevel >= 0.0f && noOfOverloadingTiles == 0)
+        {
+            alphaLevel -= alphaIncreaseVar;
+        }
+        
+        overloadPlaneRenderer.material.color = new Color(1, 1, 1, alphaLevel);
+    }
+
+    void GameOver()
+    {
+        Debug.Log("Game Over. Your score is : " + score);
+        Debug.Break();
+
     }
 
     void DynamicCheck()
@@ -99,6 +129,12 @@ public class GameController : MonoBehaviour {
             foreach (KeyValuePair<int, GameObject> tile in highlightedTiles)        // clear the flags on highlighted tiles and add them to pop list
             {
                 tile.Value.SendMessage("UncheckTrigger");
+
+                TileController tc = tile.Value.GetComponent<TileController>();
+                if (tc.isOverloading)        // check for overloading tiles
+                    DecreaseOverload();
+                tc.isPopping = true;
+
                 tilesToPop.Add(tile.Value);
             }
             highlightedTiles.Clear();                                               // remove the highlighted tiles from the list
@@ -182,6 +218,13 @@ public class GameController : MonoBehaviour {
         GUI.Label(new Rect(100, 10, 100, 80), "Score: " + score);            // score display
         GUI.Label(new Rect(700, 10, 200, 80), "Next Chain: " + nextChainTileQuantity.ToString() + " " + ColorToString(nextChainColorCode) );      // upcoming required chain display
         GUI.Label(new Rect(1200, 10, 200, 80), "Recent Chain: " + recentChainTileQuantity.ToString() + " " + ColorToString(recentChainColorCode));      // recent completed chain display
+
+
+        // Overload Display
+        if (noOfOverloadingTiles > 0)
+            GUI.Label(new Rect(100, 50, 100, 80), "OVERLOAD: ENABLED");
+        else
+            GUI.Label(new Rect(100, 50, 100, 80), "OVERLOAD: DISABLED");
     }
 
     public string ColorToString(int colorCode)
@@ -204,6 +247,24 @@ public class GameController : MonoBehaviour {
         }
 
         return res;
+    }
+
+    public void IncreaseOverload()
+    {
+        if (noOfOverloadingTiles == 0)
+            Debug.Log("OVERLOAD STARTED");
+
+        ++noOfOverloadingTiles;
+        //Debug.Log("OVERLOADING TILES: INCREASED: " + noOfOverloadingTiles.ToString());
+    }
+
+    public void DecreaseOverload()
+    {
+        if (noOfOverloadingTiles == 1)
+            Debug.Log("OVERLOAD ENDED");
+
+        --noOfOverloadingTiles;
+        //Debug.Log("OVERLOADING TILES DECREASED: " + noOfOverloadingTiles.ToString());
     }
 
 
