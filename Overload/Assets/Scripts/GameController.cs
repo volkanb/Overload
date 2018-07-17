@@ -7,7 +7,9 @@ using UnityEngine;
 
 
 public class GameController : MonoBehaviour {
+    
     public GameObject cam;
+    public StaticDataHolder datHolder;
 
     public Material[] colors;
     public Material[] colorsHighlighted;
@@ -63,6 +65,8 @@ public class GameController : MonoBehaviour {
         if(alphaLevel >= 0.0f && noOfOverloadingTiles == 0)
         {
             alphaLevel -= alphaIncreaseVar;
+            if (alphaLevel < 0.1f)
+                alphaLevel = 0.0f;
         }
         
         overloadPlaneRenderer.material.color = new Color(1, 1, 1, alphaLevel);
@@ -70,8 +74,12 @@ public class GameController : MonoBehaviour {
 
     void GameOver()
     {
-        Debug.Log("Game Over. Your score is : " + score);
-        Debug.Break();
+        datHolder = GameObject.Find("StaticDataObject").GetComponent<StaticDataHolder>();
+
+        datHolder.LoadScene(score);
+
+        //Debug.Log("Game Over. Your score is : " + score);
+        //Debug.Break();
 
     }
 
@@ -218,8 +226,10 @@ public class GameController : MonoBehaviour {
 
     private void OnGUI()
     {
+        // TEMPORARY
+        GUI.contentColor = Color.black;
         GUI.Label(new Rect(100, 10, 100, 80), "Score: " + score);            // score display
-        GUI.Label(new Rect(700, 10, 200, 80), "Next Chain: " + nextChainTileQuantity.ToString() + " " + ColorToString(nextChainColorCode) );      // upcoming required chain display
+        GUI.Label(new Rect(700, 10, 200, 80), "Next Chain: " + nextChainTileQuantity.ToString() + " " + ColorToString(nextChainColorCode));      // upcoming required chain display
         GUI.Label(new Rect(1200, 10, 200, 80), "Recent Chain: " + recentChainTileQuantity.ToString() + " " + ColorToString(recentChainColorCode));      // recent completed chain display
 
 
