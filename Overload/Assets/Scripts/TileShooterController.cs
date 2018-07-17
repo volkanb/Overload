@@ -26,7 +26,7 @@ public class TileShooterController : MonoBehaviour {
         gController.AddNewTile(transform.GetInstanceID(), tileClone.gameObject);
 
         // Unique combo tile processing
-        if (GameController.totalPops > 4 && (GameController.totalPops % 5) == 0 && GameController.totalUniqueComboTiles < (int)(GameController.totalPops / 5))
+        if (GameController.totalPops > 4 && (GameController.totalPops % 3) == 0 && GameController.totalUniqueComboTiles < (int)(GameController.totalPops / 3))
         {
             TileController tc = tileClone.GetComponent<TileController>();
             tc.textComponent = tileClone.transform.GetChild(0).transform.GetComponentInChildren<Text>();
@@ -35,7 +35,7 @@ public class TileShooterController : MonoBehaviour {
             GameController.totalUniqueComboTiles++;
 
             // Combo counter calculation depending on level progress
-            int progressIncrement = ( (int)(GameController.totalPops / 5) * 2);         // Calculate level progress based increment
+            int progressIncrement = ( (int)(GameController.totalPops / 3) );         // Calculate level progress based increment
             tc.comboCounter = ((int)Random.Range(2.0f, 4.0f) + progressIncrement);      // Add random value
             tc.textComponent.text = tc.comboCounter.ToString();            
         }

@@ -24,7 +24,7 @@ public class TileController : MonoBehaviour {
     void Start()
     {
         gController = GameObject.Find("GameController").GetComponent<GameController>();
-        rend = GetComponent<Renderer>();
+        rend = GetComponentInChildren<Renderer>();
 
         Invoke("ActivateEdgeBoolean", 2);
     }
@@ -82,7 +82,7 @@ public class TileController : MonoBehaviour {
 
 
         if (!rend)        
-            rend = GetComponent<Renderer>();        
+            rend = GetComponentInChildren<Renderer>();        
         rend.material = gController.colors[colorCode];
     }
 
@@ -92,7 +92,7 @@ public class TileController : MonoBehaviour {
             gController = GameObject.Find("GameController").GetComponent<GameController>();
 
         if (!rend)
-            rend = GetComponent<Renderer>();
+            rend = GetComponentInChildren<Renderer>();
         rend.material = gController.colorsHighlighted[colorCode];
     }
 

@@ -7,6 +7,8 @@ using UnityEngine;
 
 
 public class GameController : MonoBehaviour {
+    public GameObject cam;
+
     public Material[] colors;
     public Material[] colorsHighlighted;
     public bool highlightMode = false;
@@ -117,6 +119,7 @@ public class GameController : MonoBehaviour {
         if (highlightedTiles.Count < currentChainRequiredCombo)                 // Check if the combo requirement is met
         {
             CancelHighlight();
+            StartCoroutine(Shake(0.15f, 0.2f));
         }
         else
         {
@@ -252,7 +255,9 @@ public class GameController : MonoBehaviour {
     public void IncreaseOverload()
     {
         if (noOfOverloadingTiles == 0)
-            Debug.Log("OVERLOAD STARTED");
+        {
+            //Debug.Log("OVERLOAD STARTED");
+        }            
 
         ++noOfOverloadingTiles;
         //Debug.Log("OVERLOADING TILES: INCREASED: " + noOfOverloadingTiles.ToString());
@@ -261,10 +266,29 @@ public class GameController : MonoBehaviour {
     public void DecreaseOverload()
     {
         if (noOfOverloadingTiles == 1)
+        {
             Debug.Log("OVERLOAD ENDED");
+        }            
 
         --noOfOverloadingTiles;
         //Debug.Log("OVERLOADING TILES DECREASED: " + noOfOverloadingTiles.ToString());
+    }
+
+    public IEnumerator Shake(float duration, float magnitude)
+    {
+        Vector3 orignalPosition = cam.transform.position;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            float x = UnityEngine.Random.Range(-1f, 1f) * magnitude;
+            float y = UnityEngine.Random.Range(-1f, 1f) * magnitude;
+
+            cam.transform.position = new Vector3(x, y, -10f);
+            elapsed += Time.deltaTime;
+            yield return 0;
+        }
+        cam.transform.position = orignalPosition;
     }
 
 
