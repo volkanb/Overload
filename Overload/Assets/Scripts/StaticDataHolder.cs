@@ -19,7 +19,7 @@ public class StaticDataHolder : MonoBehaviour {
         }
     }
 
-    public void LoadScene(int score)
+    public void LoadScoreScene(int score)
     {
         if (SceneManager.GetActiveScene().name == "EndlessScene")
         {

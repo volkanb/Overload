@@ -76,7 +76,7 @@ public class GameController : MonoBehaviour {
     {
         datHolder = GameObject.Find("StaticDataObject").GetComponent<StaticDataHolder>();
 
-        datHolder.LoadScene(score);
+        datHolder.LoadScoreScene(score);
 
         //Debug.Log("Game Over. Your score is : " + score);
         //Debug.Break();
