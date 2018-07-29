@@ -26,7 +26,7 @@ public class TileShooterController : MonoBehaviour {
         gController.AddNewTile(transform.GetInstanceID(), tileClone.gameObject);
 
         // Unique combo tile processing
-        if (GameController.totalPops > 4 && (GameController.totalPops % 3) == 0 && GameController.totalUniqueComboTiles < (int)(GameController.totalPops / 3))
+        if (GameController.totalPops > 2 && (GameController.totalPops % 3) == 0 && GameController.totalUniqueComboTiles < (int)(GameController.totalPops / 3))
         {
             TileController tc = tileClone.GetComponent<TileController>();
             tc.textComponent = tileClone.transform.GetChild(0).transform.GetComponentInChildren<Text>();

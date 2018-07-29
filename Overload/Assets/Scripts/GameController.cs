@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 
@@ -16,7 +17,8 @@ public class GameController : MonoBehaviour {
     public bool highlightMode = false;
     public GameObject tappedTile = null;
 
-    // Scoring and stats
+    // Scoring and stats    
+    public Text scoreText;                     // Score text container
     public int score = 0;
     public static int totalPops = 0;
     public static int totalUniqueComboTiles = 0;
@@ -93,7 +95,11 @@ public class GameController : MonoBehaviour {
         //Debug.Log("DynamicCheck - " + highlightedTiles.Count.ToString() + " tiles in highlighted...");                
 
         if (highlightedTiles.Count < 3)
+        {
+            StartCoroutine(Shake(0.15f, 0.2f));
             CancelHighlight();
+        }
+            
         else
             RefreshHighlight();        
     }
@@ -137,6 +143,10 @@ public class GameController : MonoBehaviour {
 
             List<GameObject> tilesToPop = new List<GameObject>();
 
+            // Combo variables
+            int comboTotal = 0;
+            int noOfComboTiles = 0;
+
             foreach (KeyValuePair<int, GameObject> tile in highlightedTiles)        // clear the flags on highlighted tiles and add them to pop list
             {
                 tile.Value.SendMessage("UncheckTrigger");
@@ -144,6 +154,14 @@ public class GameController : MonoBehaviour {
                 TileController tc = tile.Value.GetComponent<TileController>();
                 if (tc.isOverloading)        // check for overloading tiles
                     DecreaseOverload();
+
+                // Combo checker
+                if (tc.comboCounter > 0)
+                {
+                    comboTotal += tc.comboCounter;
+                    noOfComboTiles++;
+                }
+                    
                 tc.isPopping = true;
 
                 tilesToPop.Add(tile.Value);
@@ -151,7 +169,7 @@ public class GameController : MonoBehaviour {
             highlightedTiles.Clear();                                               // remove the highlighted tiles from the list
 
 
-            ScoreProcessing(tilesToPop.Count, tilesToPop[0].GetComponent<TileController>().colorCode, (currentChainRequiredCombo > 0));         // handle scoring depending on player's combo and required chain
+            ScoreProcessing(tilesToPop.Count, tilesToPop[0].GetComponent<TileController>().colorCode, comboTotal, noOfComboTiles);         // handle scoring depending on player's combo and required chain
 
             foreach (GameObject go in tilesToPop.ToArray())                         // Destroy the tiles
                 Destroy(go);
@@ -174,6 +192,71 @@ public class GameController : MonoBehaviour {
         highlightedTiles[id] = tile;
     }
 
+    public void ScoreProcessing(int noOfTilesPopped, int cCode, int comboTotal, int noOfComboTiles)
+    {
+        // Debug.Log(noOfTilesPopped.ToString() + " tiles popped. " );
+
+        int scoreToAdd = 0;
+
+        // Increase the score depending on the no of tiles popped
+        scoreToAdd += noOfTilesPopped * 10;
+        // TODO: Toggle standard score notification
+                
+
+        // Check required chain, add bonus score for fulfilling the required chain, specify next chain
+        if (noOfTilesPopped >= nextChainTileQuantity && cCode == nextChainColorCode)
+        {
+            completedChains++;
+            if (completedChains >= 20)
+            {
+                nextChainTileQuantity = Mathf.CeilToInt(UnityEngine.Random.Range(18.0f, 20.0f));                
+            }
+            else if (completedChains >= 15)
+            {
+                nextChainTileQuantity = Mathf.CeilToInt(UnityEngine.Random.Range(16.0f, 18.0f));                
+            }
+            else if (completedChains >= 10)
+            {
+                nextChainTileQuantity = Mathf.CeilToInt(UnityEngine.Random.Range(12.0f, 16.0f));                
+            }
+            else if (completedChains >= 5)
+            {
+                nextChainTileQuantity = Mathf.CeilToInt(UnityEngine.Random.Range(8.0f, 12.0f));                
+            }
+            else
+            {
+                nextChainTileQuantity = Mathf.CeilToInt(UnityEngine.Random.Range(4.0f, 8.0f));                
+            }
+
+            nextChainColorCode = UnityEngine.Random.Range(0, colors.Length);           
+        }
+
+
+        // Add combo tile bonus
+        if (comboTotal > 0)
+        {
+            scoreToAdd += comboTotal * 10;
+            // TODO: Toggle combo bonus notification
+        }
+
+        if (noOfComboTiles > 1)
+        {
+            scoreToAdd *= noOfComboTiles;
+            // TODO: Toggle combo multiplier bonus notification
+        }       
+
+        // Set recent chain variables
+        recentChainColorCode = cCode;
+        recentChainTileQuantity = noOfTilesPopped;
+
+        // Add the score to total score
+        score += scoreToAdd;
+
+        // Adjust score display
+        scoreText.text = score.ToString();
+    }
+    // Legacy Score Processing
+    /*
     public void ScoreProcessing(int noOfTilesPopped, int cCode, bool comboMultiplier)
     {
         // Debug.Log(noOfTilesPopped.ToString() + " tiles popped. " );
@@ -222,8 +305,13 @@ public class GameController : MonoBehaviour {
         // Set recent chain variables
         recentChainColorCode = cCode;
         recentChainTileQuantity = noOfTilesPopped;
-    }
 
+        scoreText.text = score.ToString();
+    }
+    */
+
+    // Legacy GUI 
+    /* 
     private void OnGUI()
     {
         // TEMPORARY
@@ -239,7 +327,7 @@ public class GameController : MonoBehaviour {
         else
             GUI.Label(new Rect(100, 50, 100, 80), "OVERLOAD: DISABLED");
     }
-
+    */
     public string ColorToString(int colorCode)
     {
         string res = "";
@@ -266,9 +354,8 @@ public class GameController : MonoBehaviour {
     {
         if (noOfOverloadingTiles == 0)
         {
-            //Debug.Log("OVERLOAD STARTED");
-        }            
-
+            // Start border flashing
+        }
         ++noOfOverloadingTiles;
         //Debug.Log("OVERLOADING TILES: INCREASED: " + noOfOverloadingTiles.ToString());
     }
@@ -277,9 +364,8 @@ public class GameController : MonoBehaviour {
     {
         if (noOfOverloadingTiles == 1)
         {
-            Debug.Log("OVERLOAD ENDED");
-        }            
-
+            // Stop border flashing
+        }
         --noOfOverloadingTiles;
         //Debug.Log("OVERLOADING TILES DECREASED: " + noOfOverloadingTiles.ToString());
     }
