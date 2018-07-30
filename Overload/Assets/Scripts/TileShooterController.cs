@@ -29,6 +29,33 @@ public class TileShooterController : MonoBehaviour {
         if (GameController.totalPops > 2 && (GameController.totalPops % 3) == 0 && GameController.totalUniqueComboTiles < (int)(GameController.totalPops / 3))
         {
             TileController tc = tileClone.GetComponent<TileController>();
+            tc.isComboTile = true;
+
+            // Determine if UCT is going to be big
+            if (GameController.totalUniqueComboTiles > 1 && (GameController.totalUniqueComboTiles % 3) == 0 )
+            {
+                tc.comboCounter = (GameController.totalUniqueComboTiles + Random.Range(5, 10));
+            }
+            else
+            {
+                tc.comboCounter = Random.Range(4, 6);
+            }            
+                        
+            GameController.totalUniqueComboTiles++;
+            
+            // Tile text adjustment
+            tc.textComponent = tileClone.transform.GetChild(0).transform.GetComponentInChildren<Text>();
+            tc.textComponent.text = tc.comboCounter.ToString();
+        }
+        else
+        {
+            tileClone.transform.GetChild(0).gameObject.SetActive(false);
+        }        
+        
+        /*
+        if (GameController.totalPops > 2 && (GameController.totalPops % 3) == 0 && GameController.totalUniqueComboTiles < (int)(GameController.totalPops / 3))
+        {
+            TileController tc = tileClone.GetComponent<TileController>();
             tc.textComponent = tileClone.transform.GetChild(0).transform.GetComponentInChildren<Text>();
 
             tc.isComboTile = true;
@@ -43,5 +70,6 @@ public class TileShooterController : MonoBehaviour {
         {
             tileClone.transform.GetChild(0).gameObject.SetActive(false);
         }
+        */
     }
 }

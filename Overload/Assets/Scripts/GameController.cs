@@ -12,6 +12,9 @@ public class GameController : MonoBehaviour {
     public GameObject cam;
     public StaticDataHolder datHolder;
 
+    // Particle effects
+    public GameObject popEffectObj;
+
     public Material[] colors;
     public Material[] colorsHighlighted;
     public bool highlightMode = false;
@@ -168,11 +171,19 @@ public class GameController : MonoBehaviour {
             }
             highlightedTiles.Clear();                                               // remove the highlighted tiles from the list
 
-
-            ScoreProcessing(tilesToPop.Count, tilesToPop[0].GetComponent<TileController>().colorCode, comboTotal, noOfComboTiles);         // handle scoring depending on player's combo and required chain
+            int poppedColorCode = tilesToPop[0].GetComponent<TileController>().colorCode;
+            ScoreProcessing(tilesToPop.Count, poppedColorCode, comboTotal, noOfComboTiles);         // handle scoring depending on player's combo and required chain
 
             foreach (GameObject go in tilesToPop.ToArray())                         // Destroy the tiles
+            {
+                Vector3 psp = go.transform.position;
+                psp.z = -2;
+                ParticleSystemRenderer psr = Instantiate(popEffectObj, psp, go.transform.rotation).GetComponent<ParticleSystem>().GetComponent<ParticleSystemRenderer>();
+                psr.material = Resources.Load<Material>("Materials/" + ColorToString(poppedColorCode));
+                
                 Destroy(go);
+            }
+                
 
             totalPops++;                                                            // increment of total pops counter
             highlightMode = false;                                                  // deactivate highlight mode
@@ -231,7 +242,6 @@ public class GameController : MonoBehaviour {
             nextChainColorCode = UnityEngine.Random.Range(0, colors.Length);           
         }
 
-
         // Add combo tile bonus
         if (comboTotal > 0)
         {
@@ -255,6 +265,7 @@ public class GameController : MonoBehaviour {
         // Adjust score display
         scoreText.text = score.ToString();
     }
+
     // Legacy Score Processing
     /*
     public void ScoreProcessing(int noOfTilesPopped, int cCode, bool comboMultiplier)
