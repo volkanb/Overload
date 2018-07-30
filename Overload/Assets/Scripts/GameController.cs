@@ -49,6 +49,14 @@ public class GameController : MonoBehaviour {
         nextChainColorCode = UnityEngine.Random.Range(0, colors.Length);
         overloadPlaneRenderer = GameObject.Find("OverloadPlane").GetComponent<MeshRenderer>();
         overloadPlaneRenderer.material.color = new Color(1, 1, 1, alphaLevel);
+
+        // Initialize static vars
+        totalPops = 0;
+        totalUniqueComboTiles = 0;
+        completedChains = 0;
+        currentChainRequiredCombo = 0;
+
+        Debug.Break();
     }
 
     // Update is called once per frame

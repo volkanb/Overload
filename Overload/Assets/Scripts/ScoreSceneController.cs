@@ -25,20 +25,24 @@ public class ScoreSceneController : MonoBehaviour
         // Write the recent score to 
         recentScoreObj.GetComponent<Text>().text = playerScoreToDisplay.ToString();
 
-        // Retrive high scores
+        // High scores handling
         int[] highScores = new int[5];
+
+        // Set the high score slots, if not set before
+        for (int i = 0; i < 5; i++)
+        {
+            if (!PlayerPrefs.HasKey("highScore" + (i+1).ToString()))
+                PlayerPrefs.SetInt("highScore" + (i+1).ToString(), 0);
+        }
+
+        // Retrive high scores        
         highScores[0] = PlayerPrefs.GetInt("highScore1", 0);
         highScores[1] = PlayerPrefs.GetInt("highScore2", 0);
         highScores[2] = PlayerPrefs.GetInt("highScore3", 0);
         highScores[3] = PlayerPrefs.GetInt("highScore4", 0);
         highScores[4] = PlayerPrefs.GetInt("highScore5", 0);
 
-        // Set the high score slots, if not set before
-        for (int i = 0; i < 5; i++)
-        {
-            if (highScores[i] == 0)
-                PlayerPrefs.SetInt("highScore" + (i+1).ToString(), 0);
-        }
+       
 
         // Update high scores
         bool replace = false;
