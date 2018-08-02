@@ -398,6 +398,8 @@ MonoBehaviour:
   datHolder: {fileID: 0}
   popEffectObj: {fileID: 1021329282692308, guid: 867777014a9c40b40ae68a64e113f94b,
     type: 2}
+  scoreIncrementObj: {fileID: 1551064759232932, guid: 44d74d06244bd9441a908e3148cbd66e,
+    type: 2}
   colors:
   - {fileID: 2100000, guid: 2a6c7501dc948284883de6f67f05199e, type: 2}
   - {fileID: 2100000, guid: c8a9e979c6ab3d44695e624eccdc2735, type: 2}

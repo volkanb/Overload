@@ -15,6 +15,9 @@ public class GameController : MonoBehaviour {
     // Particle effects
     public GameObject popEffectObj;
 
+    // ScoreIncrementNotification object
+    public GameObject scoreIncrementObj;
+
     public Material[] colors;
     public Material[] colorsHighlighted;
     public bool highlightMode = false;
@@ -54,9 +57,7 @@ public class GameController : MonoBehaviour {
         totalPops = 0;
         totalUniqueComboTiles = 0;
         completedChains = 0;
-        currentChainRequiredCombo = 0;
-
-        Debug.Break();
+        currentChainRequiredCombo = 0;        
     }
 
     // Update is called once per frame
@@ -149,6 +150,7 @@ public class GameController : MonoBehaviour {
         else
         {
             CancelInvoke();                                                         // clear highlight flags and cancel the dynamic check
+            Vector3 notifPos = tappedTile.transform.position;                       // capture tappedtile pos before clear
             tappedTile = null;
             highlightMode = false;
 
@@ -180,10 +182,12 @@ public class GameController : MonoBehaviour {
             highlightedTiles.Clear();                                               // remove the highlighted tiles from the list
 
             int poppedColorCode = tilesToPop[0].GetComponent<TileController>().colorCode;
-            ScoreProcessing(tilesToPop.Count, poppedColorCode, comboTotal, noOfComboTiles);         // handle scoring depending on player's combo and required chain
+
+            int scoreIncrement = ScoreProcessing(tilesToPop.Count, poppedColorCode, comboTotal, noOfComboTiles);         // handle scoring depending on player's combo and required chain
 
             foreach (GameObject go in tilesToPop.ToArray())                         // Destroy the tiles
             {
+                // Create particle effects
                 Vector3 psp = go.transform.position;
                 psp.z = -2;
                 ParticleSystemRenderer psr = Instantiate(popEffectObj, psp, go.transform.rotation).GetComponent<ParticleSystem>().GetComponent<ParticleSystemRenderer>();
@@ -191,7 +195,11 @@ public class GameController : MonoBehaviour {
                 
                 Destroy(go);
             }
-                
+
+            // Create score increment notifications           
+            notifPos.z = -3;
+            ScoreIncrementNotificationController scoreNotifier = Instantiate(scoreIncrementObj, notifPos, Quaternion.identity).GetComponentInChildren<ScoreIncrementNotificationController>();
+            scoreNotifier.TriggerScoreIncrementNotification(scoreIncrement);
 
             totalPops++;                                                            // increment of total pops counter
             highlightMode = false;                                                  // deactivate highlight mode
@@ -211,15 +219,14 @@ public class GameController : MonoBehaviour {
         highlightedTiles[id] = tile;
     }
 
-    public void ScoreProcessing(int noOfTilesPopped, int cCode, int comboTotal, int noOfComboTiles)
+    public int ScoreProcessing(int noOfTilesPopped, int cCode, int comboTotal, int noOfComboTiles)
     {
         // Debug.Log(noOfTilesPopped.ToString() + " tiles popped. " );
 
         int scoreToAdd = 0;
 
         // Increase the score depending on the no of tiles popped
-        scoreToAdd += noOfTilesPopped * 10;
-        // TODO: Toggle standard score notification
+        scoreToAdd += noOfTilesPopped * 10;        
                 
 
         // Check required chain, add bonus score for fulfilling the required chain, specify next chain
@@ -272,6 +279,8 @@ public class GameController : MonoBehaviour {
 
         // Adjust score display
         scoreText.text = score.ToString();
+
+        return scoreToAdd;
     }
 
     // Legacy Score Processing
