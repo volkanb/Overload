@@ -3,22 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ScoreIncrementNotificationController : MonoBehaviour {
+public class RewardNotificationsController : MonoBehaviour
+{
 
     public Animator animator;
     public Text textToDisplay;
 
 
-    public void TriggerScoreIncrementNotification(int i)
+    public void TriggerRewardNotification(string rewardText)
     {
         IEnumerator coroutine;
-        coroutine = PlayScoreIncrementNotification(i);
+        coroutine = PlayRewardNotification(rewardText);
         StartCoroutine(coroutine);
     }
 
-    IEnumerator PlayScoreIncrementNotification(int increment)
+    IEnumerator PlayRewardNotification(string rewardText)
     {
-        textToDisplay.text = ("+" + increment.ToString());
+        textToDisplay.text = (rewardText);
         animator.Play("ScalingIn");
         yield return new WaitForSeconds(0.5f);
         animator.Play("ScalingOut");

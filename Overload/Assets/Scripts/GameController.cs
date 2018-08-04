@@ -196,7 +196,7 @@ public class GameController : MonoBehaviour {
                 Destroy(go);
             }
 
-            // Create score increment notifications           
+            // Create score notifications           
             notifPos.z = -3;
             ScoreIncrementNotificationController scoreNotifier = Instantiate(scoreIncrementObj, notifPos, Quaternion.identity).GetComponentInChildren<ScoreIncrementNotificationController>();
             scoreNotifier.TriggerScoreIncrementNotification(scoreIncrement);
