@@ -11,9 +11,22 @@ public class GameController : MonoBehaviour {
     
     public GameObject cam;
     public StaticDataHolder datHolder;
+    public GameObject center;
+    
 
     // Particle effects
     public GameObject popEffectObj;
+
+    // Nudge variables
+    int nudgeCounter = 0;
+    bool isNudgeDisabled = false;
+    float nudgeCoolDownTimer = 3.0f;
+    float nudgeDisableTime = 0.0f;
+    float firstNudgeTime = 0.0f;
+    float secondNudgeTime = 0.0f;
+    public GameObject cooldownPanel;
+    public GameObject rewardNotificationObj;
+
 
     // ScoreIncrementNotification object
     public GameObject scoreIncrementObj;
@@ -52,7 +65,7 @@ public class GameController : MonoBehaviour {
         nextChainColorCode = UnityEngine.Random.Range(0, colors.Length);
         overloadPlaneRenderer = GameObject.Find("OverloadPlane").GetComponent<MeshRenderer>();
         overloadPlaneRenderer.material.color = new Color(1, 1, 1, alphaLevel);
-
+        
         // Initialize static vars
         totalPops = 0;
         totalUniqueComboTiles = 0;
@@ -84,6 +97,16 @@ public class GameController : MonoBehaviour {
         }
         
         overloadPlaneRenderer.material.color = new Color(1, 1, 1, alphaLevel);
+
+        if (isNudgeDisabled)
+        {
+            if ((Time.time - nudgeDisableTime) > nudgeCoolDownTimer)
+            {
+                nudgeDisableTime = 0f;
+                isNudgeDisabled = false;
+                cooldownPanel.SetActive(false);
+            }
+        }
     }
 
     void GameOver()
@@ -185,14 +208,18 @@ public class GameController : MonoBehaviour {
 
             int scoreIncrement = ScoreProcessing(tilesToPop.Count, poppedColorCode, comboTotal, noOfComboTiles);         // handle scoring depending on player's combo and required chain
 
-            foreach (GameObject go in tilesToPop.ToArray())                         // Destroy the tiles
+            foreach (GameObject go in tilesToPop.ToArray())                         // Loop the tiles to destroy
             {
                 // Create particle effects
                 Vector3 psp = go.transform.position;
                 psp.z = -2;
                 ParticleSystemRenderer psr = Instantiate(popEffectObj, psp, go.transform.rotation).GetComponent<ParticleSystem>().GetComponent<ParticleSystemRenderer>();
                 psr.material = Resources.Load<Material>("Materials/" + ColorToString(poppedColorCode));
-                
+
+                // Remove popped tile from tiles dictionary
+                RemoveTile(go.transform.GetInstanceID());
+
+                // Destroy the tile
                 Destroy(go);
             }
 
@@ -212,6 +239,11 @@ public class GameController : MonoBehaviour {
     public void AddNewTile(int id, GameObject tile)
     {
         tiles[id] = tile;                                  
+    }
+
+    public void RemoveTile(int key)
+    {
+        tiles.Remove(key);
     }
 
     public void AddTileToHighlighted(int id, GameObject tile)
@@ -413,6 +445,89 @@ public class GameController : MonoBehaviour {
             yield return 0;
         }
         cam.transform.position = orignalPosition;
+    }
+
+    public void NudgeTiles()
+    {       
+        if (!isNudgeDisabled)
+        {
+            // First nudge of the game
+            if (nudgeCounter == 0)
+            {
+                nudgeCounter++;
+                firstNudgeTime = Time.time;
+                StartCoroutine(ShakeCenter(0.5f, 0.2f));
+            }            
+            else if (nudgeCounter == 1)
+            {
+                // If previous nudge happened more than 3 seconds ago, replace the first nudge with second nudge
+                if ((Time.time - firstNudgeTime) >= 3f)
+                    firstNudgeTime = Time.time;
+                // Else, add the second nudge and warn the player
+                else
+                {
+                    secondNudgeTime = Time.time;
+                    nudgeCounter++;
+                    Vector3 rewardPos = new Vector3(0.0f, -3.5f, 0.0f);
+                    RewardNotificationsController rewardNotifier = Instantiate(rewardNotificationObj, rewardPos, Quaternion.identity).GetComponentInChildren<RewardNotificationsController>();
+                    rewardNotifier.TriggerRewardNotification("Careful!");
+                }
+
+                StartCoroutine(ShakeCenter(0.5f, 0.2f));
+            }
+            else if (nudgeCounter == 2)
+            {
+                if ((Time.time - firstNudgeTime) < 3f)
+                {
+                    isNudgeDisabled = true;
+                    nudgeDisableTime = Time.time;
+                    nudgeCounter = 0;
+                    firstNudgeTime = 0f;
+                    secondNudgeTime = 0f;
+
+                    cooldownPanel.SetActive(true);
+                }
+                else if ((Time.time - firstNudgeTime) >= 3f && (Time.time - secondNudgeTime) < 3f)
+                {
+                    firstNudgeTime = secondNudgeTime;
+                    secondNudgeTime = 0f;
+                    nudgeCounter = 1;
+                }
+                else
+                {
+                    firstNudgeTime = Time.time;
+                    secondNudgeTime = 0f;
+                    nudgeCounter = 1;
+                }
+                StartCoroutine(ShakeCenter(0.5f, 0.2f));
+            }
+        }
+        
+    }
+
+    public IEnumerator ShakeCenter(float duration, float magnitude)
+    {
+        Vector3 orignalPosition = center.transform.position;
+        float elapsed = 0f;
+
+        float torque;
+        if (UnityEngine.Random.value > 0.5f)
+            torque = UnityEngine.Random.Range(-15f, -20f);
+        else
+            torque = UnityEngine.Random.Range(15f, 20f);
+
+        while (elapsed < duration)
+        {
+            center.GetComponent<Rigidbody2D>().AddTorque(torque);
+
+            float x = UnityEngine.Random.Range(-1f, 1f) * magnitude;
+            float y = UnityEngine.Random.Range(-1f, 1f) * magnitude;
+
+            center.transform.position = new Vector3(x, y, 0f);
+            elapsed += Time.deltaTime;
+            yield return 0;
+        }
+        center.transform.position = orignalPosition;
     }
 
 
