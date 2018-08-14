@@ -20,6 +20,8 @@ public class TileController : MonoBehaviour {
     public int comboCounter = 0;                        // Counter for unique combo tiles
     public Text textComponent = null;                   // Text component for unique combo tiles
 
+    public Transform comboNumberTransform;
+
     // Use this for initialization
     void Start()
     {
@@ -29,27 +31,37 @@ public class TileController : MonoBehaviour {
         Invoke("ActivateEdgeBoolean", 2);
     }
 
+    private void Update()
+    {
+        if (isComboTile)
+            comboNumberTransform.rotation = Quaternion.identity;
+    }
+
     public void OnMouseDown()
     {
-        if (isTriggered)
+        if (!gController.isPaused)
         {
-            // Double tap - Initiate explosion, destroy the tiles, clear the dictionaries
-            gController.SendMessage("InitiatePopSequence");
-        }
-        else
-        {
-            if (!gController)
-                gController = GameObject.Find("GameController").GetComponent<GameController>();
-            if (gController.tappedTile == null)
+            if (isTriggered)
             {
-                gController.tappedTile = this.gameObject;
+                // Double tap - Initiate explosion, destroy the tiles, clear the dictionaries
+                gController.SendMessage("InitiatePopSequence");
             }
             else
             {
-                gController.SendMessage("CancelHighlight");
-                gController.tappedTile = this.gameObject;
-            }            
-        }            
+                if (!gController)
+                    gController = GameObject.Find("GameController").GetComponent<GameController>();
+                if (gController.tappedTile == null)
+                {
+                    gController.tappedTile = this.gameObject;
+                }
+                else
+                {
+                    gController.SendMessage("CancelHighlight");
+                    gController.tappedTile = this.gameObject;
+                }
+            }
+        }
+        
     }
 
     public void ProcessAndTrigger()

@@ -80,17 +80,4 @@ public class ScoreSceneController : MonoBehaviour
     {
 
     }
-
-    /*
-    private void OnGUI()
-    {
-        GUI.contentColor = Color.black;
-        GUI.Label(new Rect(200, 200, 100, 80), "Game Over. Your score is: " + playerScoreToDisplay);            // score display
-
-        if (GUI.Button(new Rect(350, 200, 100, 50), "Restart"))
-        {
-            dh.RestartGame();
-        }
-    }
-    */
 }

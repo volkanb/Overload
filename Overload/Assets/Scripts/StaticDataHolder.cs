@@ -15,7 +15,9 @@ public class StaticDataHolder : MonoBehaviour {
         {
             DontDestroyOnLoad(this.gameObject);
             created = true;
-            //Debug.Log("Awake: " + this.gameObject);
+
+            if (SceneManager.GetActiveScene().name == "MenuScene")                            
+                endScore = 0;            
         }
     }
 
@@ -30,11 +32,22 @@ public class StaticDataHolder : MonoBehaviour {
 
     public void RestartGame()
     {
-        if (SceneManager.GetActiveScene().name == "ScoreScene")
-        {            
-            SceneManager.LoadScene("EndlessScene", LoadSceneMode.Single);
-            endScore = 0;
-        }
+        if (Time.timeScale == 0f)
+            Time.timeScale = 1f;
+        endScore = 0;
+        SceneManager.LoadScene("EndlessScene", LoadSceneMode.Single);              
     }
 
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
+    public void LoadMenuScene()
+    {
+        if (Time.timeScale == 0f)
+            Time.timeScale = 1f;
+        endScore = 0;
+        SceneManager.LoadScene("MenuScene", LoadSceneMode.Single);
+    }
 }

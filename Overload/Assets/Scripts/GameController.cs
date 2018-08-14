@@ -3,16 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
-
-
+using UnityEngine.EventSystems;
 
 public class GameController : MonoBehaviour {
     
     public GameObject cam;
     public StaticDataHolder datHolder;
     public GameObject center;
-    
+
+    public GameObject pausePanel;
+    public bool isPaused = false;
+
 
     // Particle effects
     public GameObject popEffectObj;
@@ -448,7 +449,20 @@ public class GameController : MonoBehaviour {
     }
 
     public void NudgeTiles()
-    {       
+    {
+        
+        //if (EventSystem.current.IsPointerOverGameObject())
+        //{
+        //    isIgnored = true;
+        //}
+        //if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+        //{
+        //    // Check if finger is over a UI element
+        //    if (EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
+        //    {
+        //        isIgnored = true;
+        //    }
+        //}
         if (!isNudgeDisabled)
         {
             // First nudge of the game
@@ -518,7 +532,8 @@ public class GameController : MonoBehaviour {
 
         while (elapsed < duration)
         {
-            center.GetComponent<Rigidbody2D>().AddTorque(torque);
+            if(tiles.Count > 6)
+                center.GetComponent<Rigidbody2D>().AddTorque(torque);
 
             float x = UnityEngine.Random.Range(-1f, 1f) * magnitude;
             float y = UnityEngine.Random.Range(-1f, 1f) * magnitude;
@@ -530,5 +545,21 @@ public class GameController : MonoBehaviour {
         center.transform.position = orignalPosition;
     }
 
-
+    public void PauseGame()
+    {
+        if (isPaused)
+        {
+            isPaused = false;
+            Time.timeScale = 1;
+            pausePanel.SetActive(false);
+            //enable the scripts again
+        }
+        else
+        {
+            isPaused = true;
+            Time.timeScale = 0;
+            pausePanel.SetActive(true);
+            //Disable scripts that still work while timescale is set to 0
+        }
+    }
 }
