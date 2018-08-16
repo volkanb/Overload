@@ -11,10 +11,28 @@ public class GameController : MonoBehaviour {
     public StaticDataHolder datHolder;
     public GameObject center;
 
+    // Pause menu
     public GameObject pausePanel;
     public bool isPaused = false;
 
+    // Sounds
+    public AudioSource audioSource;
 
+    public AudioClip alarmSound;
+
+    public AudioClip popSound;
+    public AudioClip shootSound;
+    public AudioClip uctShootSound;
+
+    public AudioClip buttonSound;
+
+    public AudioClip lowRewardSound;
+    public AudioClip highRewardSound;
+
+    public AudioClip gameOverSound;
+    public AudioClip failedSound;
+
+    public AudioClip nudegeSound;
     // Particle effects
     public GameObject popEffectObj;
 
@@ -134,6 +152,9 @@ public class GameController : MonoBehaviour {
         {
             StartCoroutine(Shake(0.15f, 0.2f));
             CancelHighlight();
+
+            // Sounds
+            audioSource.PlayOneShot(failedSound);
         }
             
         else
@@ -170,9 +191,14 @@ public class GameController : MonoBehaviour {
         {
             CancelHighlight();
             StartCoroutine(Shake(0.15f, 0.2f));
+            // Sounds
+            audioSource.PlayOneShot(failedSound);
         }
         else
         {
+            // Sounds - pop
+            audioSource.PlayOneShot(popSound);
+
             CancelInvoke();                                                         // clear highlight flags and cancel the dynamic check
             Vector3 notifPos = tappedTile.transform.position;                       // capture tappedtile pos before clear
             tappedTile = null;
@@ -209,6 +235,12 @@ public class GameController : MonoBehaviour {
 
             int scoreIncrement = ScoreProcessing(tilesToPop.Count, poppedColorCode, comboTotal, noOfComboTiles);         // handle scoring depending on player's combo and required chain
 
+            // Sounds - reward
+            if (scoreIncrement > 300)
+                audioSource.PlayOneShot(highRewardSound);
+            else if (scoreIncrement > 100)
+                audioSource.PlayOneShot(lowRewardSound);
+
             foreach (GameObject go in tilesToPop.ToArray())                         // Loop the tiles to destroy
             {
                 // Create particle effects
@@ -231,10 +263,8 @@ public class GameController : MonoBehaviour {
 
             totalPops++;                                                            // increment of total pops counter
             highlightMode = false;                                                  // deactivate highlight mode
-            currentChainRequiredCombo = 0;                                          // reset required combo counter
-        }
-
-        
+            currentChainRequiredCombo = 0;                                          // reset required combo counter          
+        }        
     }
 
     public void AddNewTile(int id, GameObject tile)
@@ -415,7 +445,8 @@ public class GameController : MonoBehaviour {
     {
         if (noOfOverloadingTiles == 0)
         {
-            // Start border flashing
+            // Start alarm sound
+            InvokeRepeating("PlayAlarmSound", 0.001f, 0.36f);
         }
         ++noOfOverloadingTiles;
         //Debug.Log("OVERLOADING TILES: INCREASED: " + noOfOverloadingTiles.ToString());
@@ -425,11 +456,23 @@ public class GameController : MonoBehaviour {
     {
         if (noOfOverloadingTiles == 1)
         {
-            // Stop border flashing
+            // Stop alarm sound
+            StopAlarmSound();
         }
         --noOfOverloadingTiles;
         //Debug.Log("OVERLOADING TILES DECREASED: " + noOfOverloadingTiles.ToString());
     }
+
+    public void PlayAlarmSound()
+    {
+        audioSource.PlayOneShot(alarmSound);
+    }
+
+    public void StopAlarmSound()
+    {
+        CancelInvoke("PlayAlarmSound");
+    }
+
 
     public IEnumerator Shake(float duration, float magnitude)
     {
@@ -449,20 +492,7 @@ public class GameController : MonoBehaviour {
     }
 
     public void NudgeTiles()
-    {
-        
-        //if (EventSystem.current.IsPointerOverGameObject())
-        //{
-        //    isIgnored = true;
-        //}
-        //if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
-        //{
-        //    // Check if finger is over a UI element
-        //    if (EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
-        //    {
-        //        isIgnored = true;
-        //    }
-        //}
+    {       
         if (!isNudgeDisabled)
         {
             // First nudge of the game
@@ -521,6 +551,9 @@ public class GameController : MonoBehaviour {
 
     public IEnumerator ShakeCenter(float duration, float magnitude)
     {
+        // Sounds
+        audioSource.PlayOneShot(failedSound);
+
         Vector3 orignalPosition = center.transform.position;
         float elapsed = 0f;
 
@@ -549,6 +582,9 @@ public class GameController : MonoBehaviour {
     {
         if (isPaused)
         {
+            // Sounds
+            audioSource.PlayOneShot(buttonSound);
+
             isPaused = false;
             Time.timeScale = 1;
             pausePanel.SetActive(false);
@@ -556,6 +592,9 @@ public class GameController : MonoBehaviour {
         }
         else
         {
+            // Sounds
+            audioSource.PlayOneShot(buttonSound);
+
             isPaused = true;
             Time.timeScale = 0;
             pausePanel.SetActive(true);

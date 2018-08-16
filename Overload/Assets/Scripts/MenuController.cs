@@ -5,8 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class MenuController : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
+    public AudioSource audioSource;
+    public AudioClip buttonSound;
+
+    // Use this for initialization
+    void Start () {
 		
 	}
 	
@@ -17,11 +20,15 @@ public class MenuController : MonoBehaviour {
 
     public void LoadEndlessScene()
     {
+        // Sounds
+        audioSource.PlayOneShot(buttonSound);
         SceneManager.LoadScene("EndlessScene", LoadSceneMode.Single);        
     }
 
     public void QuitGame()
     {
+        // Sounds
+        audioSource.PlayOneShot(buttonSound);
         Application.Quit();
     }
 

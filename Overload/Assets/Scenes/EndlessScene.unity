@@ -401,6 +401,17 @@ MonoBehaviour:
   center: {fileID: 1670526177}
   pausePanel: {fileID: 982019644}
   isPaused: 0
+  audioSource: {fileID: 1487580386}
+  alarmSound: {fileID: 8300000, guid: d61bc40cae576c64ead687a19b132463, type: 3}
+  popSound: {fileID: 8300000, guid: 2ab86f4622e08454a835b009e5016b66, type: 3}
+  shootSound: {fileID: 8300000, guid: 64767c3642d7662409109f5d4147cdbf, type: 3}
+  uctShootSound: {fileID: 8300000, guid: bd9037c101512e74fbf88ab41c57de05, type: 3}
+  buttonSound: {fileID: 8300000, guid: 983cef5f3ff0a77468fd85329e5a66b4, type: 3}
+  lowRewardSound: {fileID: 8300000, guid: acbaf86da67399a4c9ca3e0f92bccedc, type: 3}
+  highRewardSound: {fileID: 8300000, guid: 4560d6123603a35429df2a2637d99947, type: 3}
+  gameOverSound: {fileID: 8300000, guid: b47179f86d3449e45bb3e539330eed63, type: 3}
+  failedSound: {fileID: 8300000, guid: 0a62fc5d913a91746b7c59c4de963b62, type: 3}
+  nudegeSound: {fileID: 0}
   popEffectObj: {fileID: 1021329282692308, guid: 867777014a9c40b40ae68a64e113f94b,
     type: 2}
   cooldownPanel: {fileID: 625351098}
@@ -2094,6 +2105,7 @@ GameObject:
   - component: {fileID: 1487580382}
   - component: {fileID: 1487580381}
   - component: {fileID: 1487580385}
+  - component: {fileID: 1487580386}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -2178,6 +2190,101 @@ MonoBehaviour:
   touchInputMask:
     serializedVersion: 2
     m_Bits: 512
+--- !u!82 &1487580386
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1487580380}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!224 &1490430418 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 224035209889628444, guid: 8f569e837df7b6b4eb1a443ba50fff62,
@@ -3111,6 +3218,16 @@ Prefab:
       propertyPath: m_RootOrder
       value: 13
       objectReference: {fileID: 0}
+    - target: {fileID: 114681254730741746, guid: 9a7b47b1c7027d14a99f1ca766e4b442,
+        type: 2}
+      propertyPath: audioSource
+      value: 
+      objectReference: {fileID: 1487580386}
+    - target: {fileID: 114681254730741746, guid: 9a7b47b1c7027d14a99f1ca766e4b442,
+        type: 2}
+      propertyPath: buttonSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 983cef5f3ff0a77468fd85329e5a66b4, type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9a7b47b1c7027d14a99f1ca766e4b442, type: 2}
   m_IsPrefabParent: 0

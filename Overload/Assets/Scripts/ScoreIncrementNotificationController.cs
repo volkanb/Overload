@@ -26,9 +26,9 @@ public class ScoreIncrementNotificationController : MonoBehaviour {
         if (increment > 100)
         {
             string rewardText = "";
-            if (increment > 350)
+            if (increment > 450)
                 rewardText = "GODLIKE!";
-            else if (increment > 250)
+            else if (increment > 300)
                 rewardText = "PERFECT!";
             else if (increment > 150)
                 rewardText = "NICE!";
@@ -38,6 +38,7 @@ public class ScoreIncrementNotificationController : MonoBehaviour {
             Vector3 rewardPos = new Vector3(0.0f, -3.5f, 0.0f);
             RewardNotificationsController rewardNotifier = Instantiate(rewardNotificationObj, rewardPos, Quaternion.identity).GetComponentInChildren<RewardNotificationsController>();
             rewardNotifier.TriggerRewardNotification(rewardText);
+                       
         }
         
 

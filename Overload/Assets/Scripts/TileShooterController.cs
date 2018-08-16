@@ -10,6 +10,8 @@ public class TileShooterController : MonoBehaviour {
     public Rigidbody2D Tile;
     public GameController gController;
 
+    
+
     void Start()
     {
         gController = GameObject.Find("GameController").GetComponent<GameController>();
@@ -46,30 +48,16 @@ public class TileShooterController : MonoBehaviour {
             // Tile text adjustment
             tc.textComponent = tileClone.transform.GetChild(0).transform.GetComponentInChildren<Text>();
             tc.textComponent.text = tc.comboCounter.ToString();
+
+            // Sounds
+            gController.audioSource.PlayOneShot(gController.shootSound);
         }
         else
         {
             tileClone.transform.GetChild(0).gameObject.SetActive(false);
-        }        
-        
-        /*
-        if (GameController.totalPops > 2 && (GameController.totalPops % 3) == 0 && GameController.totalUniqueComboTiles < (int)(GameController.totalPops / 3))
-        {
-            TileController tc = tileClone.GetComponent<TileController>();
-            tc.textComponent = tileClone.transform.GetChild(0).transform.GetComponentInChildren<Text>();
 
-            tc.isComboTile = true;
-            GameController.totalUniqueComboTiles++;
-
-            // Combo counter calculation depending on level progress
-            int progressIncrement = ( (int)(GameController.totalPops / 3) );         // Calculate level progress based increment
-            tc.comboCounter = ((int)Random.Range(2.0f, 4.0f) + progressIncrement);      // Add random value
-            tc.textComponent.text = tc.comboCounter.ToString();            
-        }
-        else
-        {
-            tileClone.transform.GetChild(0).gameObject.SetActive(false);
-        }
-        */
+            // Sounds
+            gController.audioSource.PlayOneShot(gController.uctShootSound);
+        }       
     }
 }

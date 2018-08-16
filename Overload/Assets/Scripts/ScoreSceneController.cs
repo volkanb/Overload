@@ -9,6 +9,9 @@ public class ScoreSceneController : MonoBehaviour
     public GameObject recentScoreObj;
     public GameObject highScoresObj;
 
+    public AudioSource audioSource;
+    public AudioClip gameOverSound;
+
 
     public int playerScoreToDisplay = 0;
    
@@ -16,8 +19,9 @@ public class ScoreSceneController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        // Sounds
+        audioSource.PlayOneShot(gameOverSound);
         
-
         playerScoreToDisplay = StaticDataHolder.endScore;
         StaticDataHolder.endScore = 0;
 
